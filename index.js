@@ -1,10 +1,14 @@
 const express = require('express')
+
 const app = express()
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
-const morgan =require('morgan')
+const cors = require('cors')
+app.use(cors())
+
+const morgan = require('morgan')
 
 // app.use(morgan('tiny'))
 app.use(morgan(function (tokens, req, res) {
@@ -62,7 +66,7 @@ app.get('/info', (req, res) => {
     <p>${new Date()}</p>`)
 })
 
-app.get('/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   const person = persons.find(p => p.id === id)
   if (person) {
@@ -73,7 +77,7 @@ app.get('/persons/:id', (req, res) => {
   }
 })
 
-app.delete('/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   persons = persons.filter(p => p.id !== id)
   res.status(204).end()
