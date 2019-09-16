@@ -39,7 +39,7 @@ let persons = [
 
 
 app.get('/api/persons', (req, res) => {
-  res.json(notes)
+  res.json(persons)
 })
 
 app.get('/info', (req, res) => {
@@ -56,6 +56,12 @@ app.get('/persons/:id', (req, res) => {
   else {
     res.status(404).end()
   }
+})
+
+app.delete('/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  persons = persons.filter(p => p.id !== id)
+  res.status(204).end()
 })
 
 const port = 3001
