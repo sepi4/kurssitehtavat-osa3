@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
   <p>json-data on osoitteessa '.../api/persons'</p>`)
 })
 
-let notes = [
+let persons = [
   {
     name: "kissa",
     number: "111",
@@ -45,6 +45,17 @@ app.get('/api/persons', (req, res) => {
 app.get('/info', (req, res) => {
   res.send(`<p>Phonebook has of for ${notes.length} people</p>
     <p>${new Date()}</p>`)
+})
+
+app.get('/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const person = persons.find(p => p.id === id)
+  if (person) {
+    res.json(person)
+  }
+  else {
+    res.status(404).end()
+  }
 })
 
 const port = 3001
