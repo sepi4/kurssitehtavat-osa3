@@ -66,9 +66,16 @@ app.delete('/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
-  if (!body.name || !body.number) {
-    res.status(400).json({ error: "no name or number"})
+  if (!body.name) {
+    return res.status(400).json({ error: "no name"})
   }
+  if (!body.number) {
+    return res.status(400).json({ error: "no number"})
+  }
+  if (persons.find(p => p.name === body.name) !== undefined) {
+    return res.status(400).json({ error: "name is not unique"})
+  }
+
   const newPerson = {
     name: body.name,
     number: body.number,
