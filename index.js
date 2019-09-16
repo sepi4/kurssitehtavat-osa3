@@ -64,6 +64,20 @@ app.delete('/persons/:id', (req, res) => {
   res.status(204).end()
 })
 
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+  if (!body.name || !body.number) {
+    res.status(400).json({ error: "no name or number"})
+  }
+  const newPerson = {
+    name: body.name,
+    number: body.number,
+    id: Math.random()
+  }
+  person = persons.concat(newPerson)
+  res.json(newPerson)
+})
+
 const port = 3001
 app.listen(port)
 console.log(`Server running on port ${port}`)
