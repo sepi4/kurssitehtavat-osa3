@@ -4,10 +4,8 @@ const app = express()
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
-app.get('/', (req, res) => {
-  res.send(`<p>moikka</p>
-  <p>json-data on osoitteessa '.../api/persons'</p>`)
-})
+const morgan =require('morgan')
+app.use(morgan('tiny'))
 
 let persons = [
   {
@@ -36,6 +34,12 @@ let persons = [
     id: 5,
   },
 ]
+
+app.get('/', (req, res) => {
+  res.send(`<p>moikka</p>
+  <p>json-data on osoitteessa '.../api/persons'</p>`)
+})
+
 
 
 app.get('/api/persons', (req, res) => {
