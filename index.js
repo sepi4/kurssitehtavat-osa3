@@ -97,7 +97,6 @@ app.delete('/api/persons/:id', (req, res, next) => {
       res.status(204).end()
     })
     .catch(error => next(error))
-
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
