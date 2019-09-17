@@ -76,7 +76,7 @@ app.get('/info', (req, res) => {
   })
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
   Person.findById(id)
     .then(person => {
@@ -90,7 +90,7 @@ app.get('/api/persons/:id', (req, res) => {
     .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
   Person.findByIdAndRemove(id)
     .then(result => {
@@ -98,6 +98,19 @@ app.delete('/api/persons/:id', (req, res) => {
     })
     .catch(error => next(error))
 
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const id = req.params.id
+  const newPerson = {
+    name: req.body.name,
+    number: req.body.number,
+  }
+  Person.findByIdAndUpdate(id, newPerson, {new:true})
+    .then(updatedPerson => {
+      res.json(updatedPerson.toJSON())
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res) => {
@@ -129,7 +142,6 @@ app.post('/api/persons', (req, res) => {
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
-
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
@@ -141,7 +153,6 @@ const errorHandler = (error, request, response, next) => {
 
   next(error)
 }
-
 app.use(errorHandler)
 
 
