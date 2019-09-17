@@ -1,8 +1,9 @@
+require('dotenv').config()
 const express = require('express')
-
 const app = express()
-
 app.use(express.static('build'))
+
+const Person = require('./models/person')
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
@@ -58,14 +59,21 @@ app.get('/', (req, res) => {
 })
 
 
-
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  // res.json(persons)
+  Person.find({})
+    .then(persons => {
+      // res.json(persons.map(p => p.toJSON()))
+      res.json(persons)
+    })
 })
 
 app.get('/info', (req, res) => {
-  res.send(`<p>Phonebook has of for ${notes.length} people</p>
-    <p>${new Date()}</p>`)
+  Person.find({}).then(persons => {
+    res.send(`
+      <p>Phonebook has of for ${persons.length} people</p>
+      <p>${new Date()}</p>`)
+  })
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -93,17 +101,33 @@ app.post('/api/persons', (req, res) => {
   if (!body.number) {
     return res.status(400).json({ error: "no number"})
   }
-  if (persons.find(p => p.name === body.name) !== undefined) {
-    return res.status(400).json({ error: "name is not unique"})
-  }
 
-  const newPerson = {
-    name: body.name,
-    number: body.number,
-    id: Math.random()
-  }
-  persons = persons.concat(newPerson)
-  res.json(newPerson)
+  Person.find({}).then(persons => {
+    console.log("find{}", persons)
+    if (persons.find(p => p.name === body.name) !== undefined) {
+      return res.status(400).json({ error: "name is not unique"})
+    }
+
+    const newPerson = new Person({
+      name: body.name,
+      number: body.number,
+    })
+    newPerson.save().then(savedPerson => {
+      res.json(savedPerson.toJSON())
+    })
+
+  })
+
+
+  // const newPerson = {
+  //   name: body.name,
+  //   number: body.number,
+  //   id: Math.random()
+  // }
+  // persons = persons.concat(newPerson)
+  // res.json(newPerson)
+
+
 })
 
 const port = process.env.PORT || 3001
