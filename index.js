@@ -87,10 +87,7 @@ app.get('/api/persons/:id', (req, res) => {
         res.status(404).end()
       }
     })
-    .catch(err => {
-      console.log('error',err)
-      res.status(400).send({ error: 'malformatted id' })
-    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -99,9 +96,7 @@ app.delete('/api/persons/:id', (req, res) => {
     .then(result => {
       res.status(204).end()
     })
-    .catch(err => {
-      console.log('error',err)
-    })
+    .catch(error => next(error))
 
 })
 
@@ -130,6 +125,25 @@ app.post('/api/persons', (req, res) => {
 
   })
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError' && error.kind == 'ObjectId') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
+
 
 const port = process.env.PORT || 3001
 app.listen(port)
