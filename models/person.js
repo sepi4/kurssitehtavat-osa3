@@ -14,14 +14,14 @@ mongoose.connect(url, { useNewUrlParser: true })
 
 
 const personSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: true, 
+  name: {
+    type: String,
+    required: true,
     unique: true,
     minlength: 3,
   },
-  number: { 
-    type: String, 
+  number: {
+    type: String,
     required: true,
     minlength: 8,
   }
@@ -36,5 +36,5 @@ personSchema.set('toJSON', {
   }
 })
 
-module.exports = mongoose.model('Person', personSchema)  
+module.exports = mongoose.model('Person', personSchema)
 

@@ -25,33 +25,18 @@ app.use(morgan(function (tokens, req, res) {
   ].join(' ')
 }))
 
-let persons = [
-  {
-    name: "kissa",
-    number: "111",
-    id: 1,
-  },
-  {
-    name: "koira",
-    number: "222",
-    id: 2,
-  },
-  {
-    name: "apina",
-    number: "333",
-    id: 3,
-  },
-  {
-    name: "sika",
-    number: "444",
-    id: 4,
-  },
-  {
-    name: "hevonen",
-    number: "555",
-    id: 5,
-  },
-]
+// let persons = [
+//   {
+//     name: 'kissa',
+//     number: '111',
+//     id: 1,
+//   },
+//   {
+//     name: 'koira',
+//     number: '222',
+//     id: 2,
+//   },
+// ]
 
 app.get('/', (req, res) => {
   res.send(`<p>moikka</p>
@@ -105,7 +90,7 @@ app.put('/api/persons/:id', (req, res, next) => {
     name: req.body.name,
     number: req.body.number,
   }
-  Person.findByIdAndUpdate(id, newPerson, {new:true})
+  Person.findByIdAndUpdate(id, newPerson, { new:true })
     .then(updatedPerson => {
       res.json(updatedPerson.toJSON())
     })
@@ -134,7 +119,7 @@ app.use(unknownEndpoint)
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if (error.name === 'CastError' && error.kind == 'ObjectId') {
+  if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
   }
   else if (error.name === 'ValidationError') {
